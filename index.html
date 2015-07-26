@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Future of the web: Web Components and semantic Linked Data</title>
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Future of the web</h1>
+					<h3>Web Components and semantic Linked Data</h3>
+					<p>
+						<small>By <a href="https://github.com/nazar-pc">Nazar Mokrynskyi</a></small>
+					</p>
+				</section>
+
+				<section>
+					<h2>Hi from Apple</h2>
+					<pre><code>&lt;section class="section section-display" data-analytics-section-engagement="name:display"&gt;
+  &lt;div class="section-content"&gt;
+    &lt;div class="row"&gt;
+      &lt;div class="column large-5 xsmall-12 column-copy"&gt;
+        &lt;div class="section-copy" data-analytics-region="learn more"&gt;
+          &lt;a href="/iphone-6/display/" class="block"&gt;
+            &lt;h2&gt;Not just a bigger display. A better display.&lt;/h2&gt;
+            &lt;p&gt;It’s one thing to make a bigger display. It’s something else entirely to make a bigger Multi‑Touch display with brilliant colors and higher contrast at even wider viewing angles. But that’s exactly what we did with the new Retina HD display.&lt;/p&gt;
+            &lt;p&gt;&lt;span class="more block-link"&gt;Learn more about the Retina HD display&lt;/span&gt;&lt;/p&gt;
+          &lt;/a&gt;
+        &lt;/div&gt;
+        &lt;div class="callout-list row"&gt;
+          &lt;aside class="callout column large-6 xsmall-6 callout-resolution-iphone-6 callout-from-right"&gt;
+            &lt;h6 class="callout-headline"&gt;1334&lt;span class="callout-unit"&gt;×&lt;/span&gt;&lt;br /&gt;750&lt;/h6&gt;
+            &lt;p class="callout-copy"&gt;&lt;span class="callout-copy-names"&gt;iPhone 6&lt;/span&gt;&lt;br /&gt;RESOLUTION&lt;/p&gt;
+          &lt;/aside&gt;
+
+          &lt;aside class="callout column large-6 xsmall-6 callout-resolution-iphone-6-plus callout-from-right"&gt;
+            &lt;h6 class="callout-headline"&gt;1920&lt;span class="callout-unit"&gt;×&lt;/span&gt;&lt;br /&gt;1080&lt;/h6&gt;
+            &lt;p class="callout-copy"&gt;&lt;span class="callout-copy-names"&gt;iPhone 6 Plus&lt;/span&gt; RESOLUTION&lt;/p&gt;
+          &lt;/aside&gt;
+
+          &lt;figure class="image-delay image-display-hero"&gt;&lt;/figure&gt;
+        &lt;/div&gt;
+
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+					<p>
+						This is how <a href="https://www.apple.com/iphone-6/">iPhone 6 page</a> was built
+					</p>
+				</section>
+
+				<section>
+					<h2>Good or bad?</h2>
+					<p class="fragment">Not as bad as some BEM-ish markup looks like, but still far from perfect</p>
+				</section>
+				<section>
+					<h2>We need do better</h2>
+					<div class="fragment">
+						<pre><code>&lt;select multiple&gt;
+	&lt;option&gt;One&lt;/option&gt;
+	&lt;option&gt;Two&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+						<pre><code>&lt;video controls autoplay&gt;
+  &lt;source src="movie.mp4" type="video/mp4"&gt;
+&lt;/video&gt;</code></pre>
+						<p>In fact browser already does, why can't we?</p>
+					</div>
+				</section>
+
+				<section>
+					<section>
+						<h2>Indeed we can</h2>
+						<pre><code>&lt;article is="cs-indiegogo-benefits" id="benefits"&gt;
+  &lt;h1&gt;Our benefits&lt;/h1&gt;
+  &lt;picture&gt;
+    &lt;source srcset="benefits-1-mobile.jpg" media="(max-width: 1100px)"&gt;
+    &lt;img src="benefits-1.jpg" alt="Benefits"&gt;
+  &lt;/picture&gt;
+  &lt;picture&gt;
+    &lt;source srcset="benefits-2-mobile.jpg" media="(max-width: 1100px)"&gt;
+    &lt;img src="/benefits-2.jpg" alt="Benefits"&gt;
+  &lt;/picture&gt;
+  &lt;picture&gt;
+    &lt;source srcset="benefits-3-mobile.jpg" media="(max-width: 1100px)"&gt;
+    &lt;img src="benefits-3.jpg" alt="Benefits"&gt;
+  &lt;/picture&gt;
+  &lt;dl&gt;
+    &lt;dt&gt;Appliance Detection&lt;/dt&gt;
+    &lt;dd&gt;Ecoisme detects all devices in your home and shows you statistics of their usage&lt;/dd&gt;
+    &lt;dt&gt;Personalized Tips&lt;/dt&gt;
+    &lt;dd&gt;Get clear and specific tips, based on usage of your home appliances&lt;/dd&gt;
+    &lt;dt&gt;Integration with smart devices&lt;/dt&gt;
+    &lt;dd&gt;Having smart devices like NEST or WeMo, make them smarter with Ecoisme&lt;/dd&gt;
+  &lt;/dl&gt;
+&lt;/article&gt;</code></pre>
+					</section>
+					<section>
+						<h2>Benefits</h2>
+						<ul>
+							<li class="fragment">Simple to read and maintain</li>
+							<li class="fragment">Semantically meaningful</li>
+							<li class="fragment">Responsive</li>
+						</ul>
+					</section>
+					<section>
+						<img src="img/benefits.png" alt="">
+					</section>
+					<section>
+						<img src="img/benefits-mobile.png" alt="">
+					</section>
+				</section>
+
+				<section>
+					<h2>Web Components here to save you</h2>
+					<ul>
+						<li>Custom elements</li>
+						<li>HTML Imports</li>
+						<li>Templates</li>
+						<li>Shadow DOM</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Custom elements</h2>
+					<pre><code>&lt;script&gt;
+  document.registerElement('my-element', {
+    prototype: Object.create(HTMLElement.prototype)
+  });
+&lt;/script&gt;
+&lt;my-element&gt;
+  Hello, world!
+&lt;/my-element&gt;</code></pre>
+				</section>
+
+				<section>
+					<h2>HTML Imports</h2>
+					<pre><code>&lt;link href="my-element.html" rel="import"&gt;</code></pre>
+				</section>
+
+				<section>
+					<h2>Templates</h2>
+					<pre><code>&lt;template id="picture-inside"&gt;
+  &lt;img src="nice-picture.png"&gt;
+&lt;/template&gt;</code></pre>
+				</section>
+
+				<section>
+					<h2>Shadow DOM</h2>
+					<img src="img/ua-shadow-dom-option.png" alt=""><br>
+					<img src="img/ua-shadow-dom-video.png" alt="">
+				</section>
+
+				<section>
+					<h2>Polymer</h2>
+					<pre><code>&lt;dom-module id="contact-card"&gt;
+  &lt;link rel="import" type="css" href="contact-card.css"&gt;
+  &lt;template&gt;
+    &lt;content&gt;&lt;/content&gt;
+    &lt;iron-icon icon="star" hidden$="{{!starred}}"&gt;&lt;/iron-icon&gt;
+  &lt;/template&gt;
+  &lt;script&gt;
+    Polymer({
+      is: 'contact-card',
+      properties: {
+        starred: Boolean
+      }
+    });
+  &lt;/script&gt;
+&lt;/dom-module&gt;</code></pre>
+					<pre><code>&lt;contact-card starred&gt;
+  &lt;img src="profile.jpg" alt="Eric's photo"&gt;
+  &lt;span&gt;Eric Bidelman&lt;/span&gt;
+&lt;/contact-card&gt;</code></pre>
+					<pre><code>&lt;google-map lat="37.790" long="-122.390"&gt;&lt;/google-map&gt;</code></pre>
+				</section>
+
+				<section>
+					<h2>Data</h2>
+					<p>How they appear on web-page:</p>
+					<pre><code>&lt;div class="buystrip-product-block"&gt;
+  &lt;h4 class="buystrip-product-title"&gt;iPhone 6&lt;/h4&gt;
+  &lt;p class="buystrip-product-copy"&gt;From $199&lt;/p&gt;
+  &lt;p class="buystrip-product-copy block-link more"&gt;Compare iPhone models&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+				</section>
+
+				<section>
+					<h2>Good or bad?</h2>
+					<p class="fragment">
+						Doesn't look as bad as it might if we use semantically correct microdata or RDFa, but still far from perfect
+					</p>
+				</section>
+
+				<section>
+					<section>
+						<h2>We need do better</h2>
+						<p class="fragment">Why not just use JSON we all know and use everyday?</p>
+						<div class="fragment">
+							<p>Seems to be a good idea, please welcome, JSON-LD:</p>
+							<pre><code>{
+  "@context" : "https://schema.org",
+  "@id"      : "https://github.com/nazar-pc",
+  "@type"    : "Person",
+  "name"     : "Nazar Mokrynskyi",
+  "image"    : "https://www.gravatar.com/avatar/3d67cc976284fd62356e2edd8a8dfc49"
+}</code></pre>
+						</div>
+					</section>
+					<section>
+						<h2>Benefits</h2>
+						<ul>
+							<li class="fragment">Simple to read and maintain</li>
+							<li class="fragment">Semantically meaningful and very specific, anyone can understand it</li>
+							<li class="fragment">Usually came without significant changes directly from API</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<h2>But we still have a problem</h2>
+					<p>Data are duplicated in JSON-LD structure and in page body</p>
+					<p class="fragment">Wait, they are the same, aren't they?</p>
+				</section>
+
+				<section>
+					<h2>Web Components + JSON-LD</h2>
+					<pre><code>&lt;dom-module id="my-profile"&gt;
+  &lt;template&gt;
+    &lt;a href="{{jsonld.@id}}"&gt;
+      &lt;img src="{{jsonld.image}}" alt="{{jsonld.name}}"&gt;
+    &lt;/a&gt;
+  &lt;/template&gt;
+  &lt;script&gt;
+    Polymer({
+      is         : 'my-profile',
+      properties : {
+        jsonld : Object
+      },
+      ready      : function () {
+        var jsonld = Polymer.dom(this).querySelector('script').innerHTML;
+        this.set('jsonld', JSON.parse(jsonld));
+      }
+    });
+  &lt;/script&gt;
+&lt;/dom-module&gt;</code></pre>
+					<pre><code>&lt;my-profile&gt;
+  &lt;script type="application/ld+json"&gt;
+    {
+      "@context" : "https://schema.org",
+      "@id"      : "https://github.com/nazar-pc",
+      "@type"    : "Person",
+      "name"     : "Nazar Mokrynskyi",
+      "image"    : "https://www.gravatar.com/avatar/3d67cc976284fd62356e2edd8a8dfc49"
+    }
+  &lt;/script&gt;
+&lt;/my-profile&gt;
+</code></pre>
+				</section>
+				<section>
+					<h2>Benefits</h2>
+					<h4 class="fragment">Everything mentioned before in one place)</h4>
+				</section>
+				<section>
+					<h2>Links</h2>
+					<p>
+						<a href="http://webcomponents.org/">WebComponents.org</a>
+					</p>
+					<p>
+						<a href="https://www.polymer-project.org/">Polymer</a>
+					</p>
+					<p>
+						<a href="http://updates.html5rocks.com/2015/03/creating-semantic-sites-with-web-components-and-jsonld">Creating semantic sites with Web Components and JSON-LD</a>
+					</p>
+					<p>
+						<a href="http://habrahabr.ru/post/253479/">Создание семантических сайтов с помощью веб-компонентов и JSON-LD</a>
+					</p>
+				</section>
+				<section>
+					<h2>Questions?</h2>
+					<p>Nazar Mokrynskyi</p>
+					<p>
+						<a href="https://github.com/nazar-pc">https://github.com/nazar-pc</a>
+					</p>
+					<p>
+						<a href="https://twitter.com/nazarpc">@nazarpc</a>
+					</p>
+					<p>Skype: nazar-pc</p>
+					<p>Diaspora: nazarpc@diaspora.mokrynskyi.com</p>
+					<p>Tox: A9D95C9AA5F7A3ED75D83D0292E22ACE84BA40E912185939414475AF28FD2B2A5C8EF5261249</p>
+				</section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			Reveal.initialize({
+				height   : 1000,
+				width    : 1850,
+				controls : true,
+				progress : true,
+				history  : true,
+				center   : true,
+
+				transition : 'convex',
+
+				// Optional reveal.js plugins
+				dependencies : [
+					{
+						src : 'lib/js/classList.js', condition : function () {
+						return !document.body.classList;
+					}
+					},
+					{
+						src : 'plugin/markdown/marked.js', condition : function () {
+						return !!document.querySelector('[data-markdown]');
+					}
+					},
+					{
+						src : 'plugin/markdown/markdown.js', condition : function () {
+						return !!document.querySelector('[data-markdown]');
+					}
+					},
+					{
+						src     : 'plugin/highlight/highlight.js', async : true, condition : function () {
+						return !!document.querySelector('pre code');
+					}, callback : function () {
+						hljs.initHighlightingOnLoad();
+					}
+					},
+					{src : 'plugin/zoom-js/zoom.js', async : true},
+					{src : 'plugin/notes/notes.js', async : true}
+				]
+			});
+		</script>
+	</body>
+</html>
